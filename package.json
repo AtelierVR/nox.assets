@@ -1,0 +1,6 @@
+{
+    "name": "nox.assets",
+    "displayName": "Nox - Assets",
+    "version": "1.0.0",
+    "description": "Shared asset cache and endpoint-driven asset downloads (avatars, worlds, mods…) for Nox."
+}

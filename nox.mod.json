@@ -1,0 +1,58 @@
+{
+  "type": "mod",
+  "id": "nox.assets",
+  "provides": [
+    "assets"
+  ],
+  "name": "Assets",
+  "version": "1.0.x",
+  "description": "Shared asset cache, endpoint-driven downloads and editor publish helpers (avatars, worlds, mods...).",
+  "license": "GPL-3.0",
+  "icon": null,
+  "contact": {
+    "email": "hactazia@gmail.com",
+    "source": "https://github.com/AtelierVR/nox.assets",
+    "website": "https://nox.hactazia.fr/",
+    "issues": "https://github.com/AtelierVR/nox.assets/issues"
+  },
+  "authors": [
+    {
+      "name": "Hactazia",
+      "email": "hactazia@gmail.com",
+      "website": "https://hactazia.fr/"
+    }
+  ],
+  "relations": [
+    {
+      "id": "network",
+      "type": "depends",
+      "version": ">=1.0.0",
+      "register": "git+https://github.com/AtelierVR/nox.network.git"
+    },
+    {
+      "id": "users",
+      "type": "depends",
+      "version": ">=1.0.0",
+      "register": "git+https://github.com/AtelierVR/nox.users.git"
+    }
+  ],
+  "constraints": [
+    {
+      "type": "after",
+      "id": "network"
+    },
+    {
+      "type": "after",
+      "id": "users"
+    }
+  ],
+  "entrypoints": {
+    "main": [
+      "Nox.Assets.Runtime.Main",
+      "Nox.Assets.Runtime.Assets.AssetsClient"
+    ],
+    "editor": [
+      "Nox.Assets.Editor.Editor"
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<linker>
+	<assembly fullname="Nox.Assets" preserve="all" />
+	<assembly fullname="Nox.Assets.CCK" preserve="all" />
+	<assembly fullname="Nox.Assets.Runtime" preserve="all" />
+</linker>

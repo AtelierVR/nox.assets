@@ -1,0 +1,24 @@
+{
+    "name": "Nox.Assets.Editor",
+    "rootNamespace": "",
+    "references": [
+        "Nox.CCK",
+        "UniTask",
+        "Nox.Network",
+        "Nox.CCK.Network",
+        "Nox.Assets",
+        "Nox.Editor.Panel",
+        "Nox.Users"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
