@@ -30,10 +30,22 @@
       "register": "git+https://github.com/AtelierVR/nox.network.git"
     },
     {
+      "id": "nox.cck",
+      "type": "depends",
+      "version": ">=1.0.0",
+      "register": "git+https://github.com/AtelierVR/nox.cck.git"
+    },
+    {
       "id": "users",
       "type": "depends",
       "version": ">=1.0.0",
       "register": "git+https://github.com/AtelierVR/nox.users.git"
+    },
+    {
+      "id": "nox.editor.panel",
+      "type": "depends",
+      "version": ">=1.0.0",
+      "register": "git+https://github.com/AtelierVR/nox.editor.panel.git"
     }
   ],
   "constraints": [
@@ -43,7 +55,15 @@
     },
     {
       "type": "after",
+      "id": "nox.cck"
+    },
+    {
+      "type": "after",
       "id": "users"
+    },
+    {
+      "type": "after",
+      "id": "nox.editor.panel"
     }
   ],
   "entrypoints": {
