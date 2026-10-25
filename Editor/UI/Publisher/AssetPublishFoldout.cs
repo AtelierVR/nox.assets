@@ -1,16 +1,28 @@
 using System;
+using Nox.CCK.Editor;
+using Nox.CCK.Language;
 using UnityEngine.UIElements;
 
 namespace Nox.Assets.Editor {
 	/// <summary>
 	/// Foldout whose open/closed state is persisted per panel and section
 	/// (<see cref="AssetPublishSettings.Foldout"/>), so the publisher reopens as the user left it.
+	/// Its title is always a language entry (<see cref="ILocalizedElement"/>): there is no literal
+	/// fallback, a missing key shows as <c>[key]</c> in the language manager.
 	/// </summary>
-	public class AssetPublishFoldout : Foldout {
+	public class AssetPublishFoldout : Foldout, ILocalizedElement {
 		private readonly string _panel;
 		private readonly string _section;
 
-		public AssetPublishFoldout(string panel, string section, string title, bool fallback = true) {
+		private string _langKey;
+
+		public AssetPublishFoldout(
+			string panel,
+			string section,
+			string langKey,
+			bool defaultExpanded = true,
+			params object[] args
+		) {
 			_panel   = panel;
 			_section = section;
 
@@ -20,8 +32,11 @@ namespace Nox.Assets.Editor {
 			AddToClassList("foldout-flush");
 			AddToClassList("large");
 
-			text  = title;
-			value = AssetPublishSettings.Foldout(panel, section, fallback);
+			LangKey = langKey;
+			value   = AssetPublishSettings.Foldout(panel, section, defaultExpanded);
+
+			if (args is { Length: > 0 })
+				LangArgs = args;
 
 			this.RegisterValueChangedCallback(evt => {
 				if (_panel == null || _section == null)
@@ -31,54 +46,27 @@ namespace Nox.Assets.Editor {
 			});
 		}
 
-		/// <summary>
-		/// Moves <paramref name="content"/> inside a persisted foldout. Used to turn an existing
-		/// section of a UXML panel into a collapsible one without touching the layout.
-		/// </summary>
-		public static AssetPublishFoldout Wrap(
-			VisualElement content,
-			string panel,
-			string section,
-			string title,
-			bool fallback = true
-		) {
-			if (content == null)
-				return null;
-
-			var foldout = new AssetPublishFoldout(panel, section, title, fallback);
-
-			content.RemoveFromHierarchy();
-			foldout.Add(content);
-
-			return foldout;
+		/// <summary>Key of the language entry shown as title.</summary>
+		public string LangKey {
+			get => _langKey;
+			set {
+				_langKey = value;
+				RefreshText();
+			}
 		}
 
-		/// <summary>
-		/// Wraps the nearest <see cref="GroupBox"/> of <paramref name="element"/> in a persisted
-		/// foldout, in place (same parent, same index). The UXML sections keep their layout.
-		/// </summary>
-		public static AssetPublishFoldout WrapSection(
-			VisualElement element,
-			string panel,
-			string section,
-			string title,
-			bool fallback = true
-		) {
-			var box = element as GroupBox ?? element?.GetFirstAncestorOfType<GroupBox>();
+		/// <summary>Arguments formatted into the entry (kept in <c>userData</c>).</summary>
+		public object[] LangArgs {
+			get => userData as object[];
+			set {
+				userData = value;
+				RefreshText();
+			}
+		}
 
-		if (box?.parent == null)
-			return null;
-
-			var parent = box.parent;
-			var index  = parent.IndexOf(box);
-
-			var foldout = Wrap(box, panel, section, title, fallback);
-
-			if (foldout == null)
-				return null;
-
-			parent.Insert(index, foldout);
-			return foldout;
+		public void RefreshText() {
+			if (!string.IsNullOrEmpty(_langKey))
+				text = LanguageManager.Get(_langKey, LangArgs);
 		}
 	}
 }

@@ -102,10 +102,14 @@ namespace Nox.Assets.Editor {
 
 		public void OnDestroy() {
 			AssetNotificationHelper.OnNotificationsChanged.RemoveListener(OnNotificationsChanged);
+			LanguageManager.OnLanguageChanged.RemoveListener(OnLanguageChanged);
 
 			if (_panel is AssetBuilderPanel provider)
 				provider.Instance = null;
 		}
+
+		private void OnLanguageChanged(string language)
+			=> AssetLocalization.Refresh(_root);
 
 		public VisualElement GetContent() {
 			if (_root != null)
@@ -151,12 +155,12 @@ namespace Nox.Assets.Editor {
 			};
 			_noSelection.AddToClassList("p-8");
 
-			var noSelectionTitle = new Label($"No {_source.Label} Selected");
+			var noSelectionTitle = AssetLocalization.Label("assets.builder.no_selection.title", _source.Label);
 			noSelectionTitle.AddToClassList("text-lg");
 			noSelectionTitle.AddToClassList("text-center");
 			noSelectionTitle.AddToClassList("mb-8");
 
-			var noSelectionDetail = new Label($"Please select a {_source.Label.ToLowerInvariant()} to build.");
+			var noSelectionDetail = AssetLocalization.Label("assets.builder.no_selection.detail", _source.Label.ToLowerInvariant());
 			noSelectionDetail.AddToClassList("text-center");
 
 			_noSelection.Add(noSelectionTitle);
@@ -169,12 +173,12 @@ namespace Nox.Assets.Editor {
 			};
 			_allGood.AddToClassList("p-8");
 
-			var allGoodTitle = new Label("All good");
+			var allGoodTitle = AssetLocalization.Label("assets.builder.all_good.title");
 			allGoodTitle.AddToClassList("text-lg");
 			allGoodTitle.AddToClassList("text-center");
 			allGoodTitle.AddToClassList("mb-8");
 
-			var allGoodDetail = new Label("No notifications, this " + _source.Label.ToLowerInvariant() + " is ready to build.");
+			var allGoodDetail = AssetLocalization.Label("assets.builder.all_good.detail", _source.Label.ToLowerInvariant());
 			allGoodDetail.AddToClassList("text-center");
 
 			_allGood.Add(allGoodTitle);
@@ -197,11 +201,11 @@ namespace Nox.Assets.Editor {
 			_output.RegisterValueChangedCallback(evt => OutputFolder = evt.newValue);
 			outputRow.Add(_output);
 
-			var select = new Button(SelectOutput) { text = "Select" };
+			var select = AssetLocalization.Button(SelectOutput, "assets.common.select");
 			select.AddToClassList("large");
 			outputRow.Add(select);
 
-			var open = new Button(OpenOutput) { text = "Open" };
+			var open = AssetLocalization.Button(OpenOutput, "assets.common.open");
 			open.AddToClassList("large");
 			open.style.marginLeft = 4;
 			outputRow.Add(open);
@@ -219,7 +223,9 @@ namespace Nox.Assets.Editor {
 			});
 			buildRow.Add(_platforms);
 
-			_build = new Button(() => BuildAsync().Forget()) { text = "Build", style = { minWidth = 134, marginLeft = 4 } };
+			_build = AssetLocalization.Button(() => BuildAsync().Forget(), "assets.builder.build");
+			_build.style.minWidth = 134;
+			_build.style.marginLeft = 4;
 			_build.AddToClassList("large");
 			buildRow.Add(_build);
 
@@ -230,7 +236,7 @@ namespace Nox.Assets.Editor {
 			_buildingContainer = new VisualElement { style = { display = DisplayStyle.None } };
 			_buildingContainer.AddToClassList("p-8");
 
-			_buildingStatus = new Label("Preparing...");
+			_buildingStatus = AssetLocalization.Label("assets.builder.preparing");
 			_buildingProgress = new ProgressBar { value = 0 };
 			_buildingProgress.AddToClassList("large");
 
@@ -241,9 +247,11 @@ namespace Nox.Assets.Editor {
 			_resultContainer = new VisualElement { style = { display = DisplayStyle.None } };
 			_resultContainer.AddToClassList("p-8");
 
-			_resultSuccess = new Label("Build succeeded") { style = { display = DisplayStyle.None } };
+			_resultSuccess = AssetLocalization.Label("assets.builder.built");
+			_resultSuccess.style.display = DisplayStyle.None;
 			_resultSuccess.AddToClassList("text-lg");
-			_resultFailed = new Label("Build failed") { style = { display = DisplayStyle.None } };
+			_resultFailed = AssetLocalization.Label("assets.builder.failed");
+			_resultFailed.style.display = DisplayStyle.None;
 			_resultFailed.AddToClassList("text-lg");
 
 			_resultDetails = new Label { style = { whiteSpace = WhiteSpace.Normal, marginTop = 8 } };
@@ -255,6 +263,8 @@ namespace Nox.Assets.Editor {
 
 			OnNotificationsChanged(AssetNotificationHelper.Notifications.ToArray());
 			RefreshState();
+
+			LanguageManager.OnLanguageChanged.AddListener(OnLanguageChanged);
 
 			return _root;
 		}

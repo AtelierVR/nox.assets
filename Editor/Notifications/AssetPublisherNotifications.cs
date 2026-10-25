@@ -45,7 +45,7 @@ namespace Nox.Assets.Editor {
 			Replace(new AssetNotification(
 				uid,
 				AssetNotificationType.Warning,
-				new[] { $"You need to log in to publish a {source.Label.ToLowerInvariant()}." }
+				new[] { "assets.notifications.not_connected", source.Label.ToLowerInvariant() }
 			));
 		}
 
@@ -63,21 +63,19 @@ namespace Nox.Assets.Editor {
 
 			var actions = candidates.Length > 0
 				? new[] {
-					new AssetNotificationAction(new[] { "Select" }, () => SelectCandidate(candidates[0])),
-					new AssetNotificationAction(new[] { "Create" }, () => CreateDescriptor(source))
+					new AssetNotificationAction(new[] { "assets.common.select" }, () => SelectCandidate(candidates[0])),
+					new AssetNotificationAction(new[] { "assets.common.create" }, () => CreateDescriptor(source))
 				}
 				: new[] {
-					new AssetNotificationAction(new[] { "Create" }, () => CreateDescriptor(source))
+					new AssetNotificationAction(new[] { "assets.common.create" }, () => CreateDescriptor(source))
 				};
 
 			Replace(new AssetNotification(
 				uid,
 				AssetNotificationType.Warning,
-				new[] {
-					candidates.Length > 0
-						? $"No {source.Label.ToLowerInvariant()} selected."
-						: $"No {source.Label} found in the scene."
-				},
+				candidates.Length > 0
+					? new[] { "assets.notifications.no_selection", source.Label.ToLowerInvariant() }
+					: new[] { "assets.notifications.none_found", source.Label },
 				actions
 			));
 		}

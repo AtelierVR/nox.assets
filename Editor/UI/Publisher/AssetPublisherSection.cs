@@ -13,8 +13,8 @@ namespace Nox.Assets.Editor {
 		/// <summary>Stable identifier, used to persist the open/closed state.</summary>
 		public abstract string Id { get; }
 
-		/// <summary>Title of the foldout.</summary>
-		public abstract string Title { get; }
+		/// <summary>Key of the language entry shown as foldout title (no literal fallback).</summary>
+		public abstract string TitleKey { get; }
 
 		/// <summary>State of the foldout the first time the section is shown.</summary>
 		public virtual bool DefaultExpanded

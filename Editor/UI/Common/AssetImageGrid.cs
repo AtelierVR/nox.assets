@@ -97,7 +97,7 @@ namespace Nox.Assets.Editor {
 			Apply(asset);
 
 			if (_images.Count == 0)
-				SetStatus("No image yet.");
+				SetStatus(AssetLocalization.Text("assets.images.none"));
 
 			await LoadThumbnailsAsync();
 		}
@@ -107,19 +107,19 @@ namespace Nox.Assets.Editor {
 			var assets = Editor.Pipeline;
 
 			if (assets == null || string.IsNullOrEmpty(_assetRef)) {
-				SetStatus("Not attached to an asset.");
+				SetStatus(AssetLocalization.Text("assets.images.not_attached"));
 				return;
 			}
 
 			var name = Path.GetFileName(path);
 
 			if (LoadTexture(path) == null) {
-				SetStatus($"Cannot read {name}.");
+				SetStatus(AssetLocalization.Text("assets.images.cannot_read", name));
 				return;
 			}
 
 			ShowProgress(true);
-			SetStatus($"Uploading {name}...");
+			SetStatus(AssetLocalization.Text("assets.images.uploading", name));
 
 			var asset = await assets.AddImage(
 				_server,
@@ -128,20 +128,20 @@ namespace Nox.Assets.Editor {
 				path,
 				(ratio, bytes) => {
 					_progress.value = Mathf.Clamp01(ratio) * 100f;
-					SetStatus($"Uploading {name}... {ratio * 100f:F0}% ({bytes / 1_000_000f:F2} MB)");
+					SetStatus(AssetLocalization.Text("assets.images.uploading_progress", name, (ratio * 100f).ToString("F0"), (bytes / 1_000_000f).ToString("F2")));
 				}
 			);
 
 			ShowProgress(false);
 
 			if (asset == null) {
-				SetStatus("Failed to upload the image.");
+				SetStatus(AssetLocalization.Text("assets.images.upload_failed"));
 				return;
 			}
 
 			// The node returned the updated asset: draw the tiles now, download the pictures after.
 			Apply(asset);
-			SetStatus("Image uploaded.");
+			SetStatus(AssetLocalization.Text("assets.images.uploaded"));
 
 			await LoadThumbnailsAsync();
 		}
@@ -157,18 +157,18 @@ namespace Nox.Assets.Editor {
 			var previous = new List<IAssetImage>(_images);
 
 			RemoveLocally(index);
-			SetStatus("Removing...");
+			SetStatus(AssetLocalization.Text("assets.images.removing"));
 
 			var asset = await assets.RemoveImage(_server, _endpoint, _assetRef, index);
 
 			if (asset == null) {
 				Apply(previous);
-				SetStatus("Failed to remove the image.");
+				SetStatus(AssetLocalization.Text("assets.images.remove_failed"));
 				return;
 			}
 
 			Apply(asset);
-			SetStatus("Image removed.");
+			SetStatus(AssetLocalization.Text("assets.images.removed"));
 
 			await LoadThumbnailsAsync();
 		}
@@ -180,17 +180,17 @@ namespace Nox.Assets.Editor {
 			if (assets == null || string.IsNullOrEmpty(_assetRef))
 				return;
 
-			SetStatus("Saving...");
+			SetStatus(AssetLocalization.Text("assets.images.saving"));
 
 			var asset = await assets.UpdateImage(_server, _endpoint, _assetRef, index, priority, alt);
 
 			if (asset == null) {
-				SetStatus("Failed to save the image.");
+				SetStatus(AssetLocalization.Text("assets.images.save_failed"));
 				return;
 			}
 
 			Apply(asset);
-			SetStatus("Image saved.");
+			SetStatus(AssetLocalization.Text("assets.images.saved"));
 		}
 
 		// --- Model → UI -----------------------------------------------------------------------
@@ -332,7 +332,7 @@ namespace Nox.Assets.Editor {
 				}
 			};
 
-			tile.tooltip = "Add an image";
+			tile.tooltip = AssetLocalization.Text("assets.images.add");
 
 			return tile;
 		}
@@ -425,13 +425,12 @@ namespace Nox.Assets.Editor {
 				};
 				root.Add(preview);
 
-				var priority = new IntegerField("Priority") { value = _image?.Priority ?? 0 };
+				var priority = new IntegerField(AssetLocalization.Text("assets.images.priority")) { value = _image?.Priority ?? 0 };
 				priority.AddToClassList("large");
-				priority.tooltip = "Higher priority images are picked first.";
 				priority.style.marginBottom = 8;
 				root.Add(priority);
 
-				var alt = new TextField("Alt") { value = _image?.Alt ?? string.Empty };
+				var alt = new TextField(AssetLocalization.Text("assets.images.alt")) { value = _image?.Alt ?? string.Empty };
 				alt.AddToClassList("large");
 				alt.style.marginBottom = 8;
 				root.Add(alt);
@@ -439,17 +438,20 @@ namespace Nox.Assets.Editor {
 				var actions = new VisualElement { style = { flexDirection = FlexDirection.Row } };
 				actions.AddToClassList("mt-8");
 
-				var save = new Button(() => {
+				var save = AssetLocalization.Button(() => {
 					_save?.Invoke(priority.value, alt.value);
 					editorWindow?.Close();
-				}) { text = "Save", style = { flexGrow = 1, marginRight = 4 } };
+				}, "assets.common.save");
+				save.style.flexGrow = 1;
+				save.style.marginRight = 4;
 				save.AddToClassList("large");
 				actions.Add(save);
 
-				var remove = new Button(() => {
+				var remove = AssetLocalization.Button(() => {
 					_remove?.Invoke();
 					editorWindow?.Close();
-				}) { text = "Remove", style = { flexGrow = 1 } };
+				}, "assets.common.remove");
+				remove.style.flexGrow = 1;
 				remove.AddToClassList("large");
 				actions.Add(remove);
 

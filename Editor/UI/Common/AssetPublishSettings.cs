@@ -11,8 +11,8 @@ namespace Nox.Assets.Editor {
 		private static readonly string[] Root = { "assets", "ui" };
 
 		/// <summary>Whether the foldout <paramref name="section"/> of <paramref name="panel"/> is open.</summary>
-		public static bool Foldout(string panel, string section, bool fallback = true)
-			=> Get(Path(panel, "foldout", section), fallback);
+		public static bool Foldout(string panel, string section, bool defaultExpanded = true)
+			=> Get(Path(panel, "foldout", section), defaultExpanded);
 
 		/// <summary>Remembers the state of a foldout.</summary>
 		public static void SetFoldout(string panel, string section, bool expanded)

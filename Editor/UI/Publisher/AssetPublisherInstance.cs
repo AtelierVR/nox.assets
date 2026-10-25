@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Nox.CCK.Convertors;
+using Nox.CCK.Language;
 using Nox.CCK.Mods.Events;
 using Nox.CCK.Utils;
 using Nox.Editor.Panel;
@@ -110,6 +111,7 @@ namespace Nox.Assets.Editor {
 
 		public void OnDestroy() {
 			EditorApplication.update -= OnEditorUpdate;
+			LanguageManager.OnLanguageChanged.RemoveListener(OnLanguageChanged);
 
 			if (_userSubscription != null) {
 				Editor.CoreAPI?.EventAPI.Unsubscribe(_userSubscription);
@@ -181,7 +183,8 @@ namespace Nox.Assets.Editor {
 			_platforms = new PlatformPopupField { style = { flexGrow = 1 } };
 			footer.Add(_platforms);
 
-			_publish = new Button(() => PublishAsync().Forget()) { text = "Publish", style = { minWidth = 134 } };
+			_publish = AssetLocalization.Button(() => PublishAsync().Forget(), "assets.publisher.publish");
+			_publish.style.minWidth = 134;
 			_publish.AddToClassList("large");
 			footer.Add(_publish);
 
@@ -191,7 +194,7 @@ namespace Nox.Assets.Editor {
 			_progressContainer = new VisualElement { style = { display = DisplayStyle.None } };
 			_progressContainer.AddToClassList("p-8");
 
-			_status   = new Label("Preparing...");
+			_status   = AssetLocalization.Label("assets.builder.preparing");
 			_progress = new ProgressBar { value = 0 };
 			_progress.AddToClassList("large");
 
@@ -209,6 +212,7 @@ namespace Nox.Assets.Editor {
 			_userSubscription = Editor.CoreAPI?.EventAPI.Subscribe("user_updated", _ => OnUserUpdated());
 			_lastUser         = CurrentUser?.Identifier.ToString() ?? string.Empty;
 			EditorApplication.update += OnEditorUpdate;
+			LanguageManager.OnLanguageChanged.AddListener(OnLanguageChanged);
 
 			RefreshLogin();
 			RefreshSelection();
@@ -226,17 +230,17 @@ namespace Nox.Assets.Editor {
 		// Construction helpers (styled with the shared nox.style.uss classes)
 		// ---------------------------------------------------------------------------------------
 
-		private static VisualElement BuildStateBox(string title, string detail) {
+		private static VisualElement BuildStateBox(string titleKey, string detailKey, params object[] args) {
 			var box = new GroupBox { style = { flexGrow = 1, justifyContent = Justify.Center, display = DisplayStyle.None } };
 			box.AddToClassList("p-8");
 			box.AddToClassList("m-0");
 
-			var titleLabel = new Label(title);
+			var titleLabel = AssetLocalization.Label(titleKey, args);
 			titleLabel.AddToClassList("text-lg");
 			titleLabel.AddToClassList("text-center");
 			titleLabel.AddToClassList("mb-8");
 
-			var detailLabel = new Label(detail);
+			var detailLabel = AssetLocalization.Label(detailKey, args);
 			detailLabel.AddToClassList("text-center");
 
 			box.Add(titleLabel);
@@ -250,18 +254,18 @@ namespace Nox.Assets.Editor {
 			box.AddToClassList("m-0");
 			box.AddToClassList("border-b");
 
-			var title = new Label($"Attach {_source.Label}");
+			var title = AssetLocalization.Label("assets.publisher.attach", _source.Label);
 			title.AddToClassList("text-lg");
 			title.AddToClassList("mb-8");
 			box.Add(title);
 
-			_attachId = AddRow(box, "Id", new TextField { }, "(auto-generate)") as TextField;
-			_attachServer = AddRow(box, "Server", new TextField { }, "(auto-filled)") as TextField;
+			_attachId = AddRow(box, "assets.publisher.id", new TextField { }, "(auto-generate)") as TextField;
+			_attachServer = AddRow(box, "assets.publisher.server", new TextField { }, "(auto-filled)") as TextField;
 
 			if (_attachServer != null)
 				_attachServer.SetEnabled(false);
 
-			var attach = new Button(() => AttachAsync().Forget()) { text = "Attach" };
+			var attach = AssetLocalization.Button(() => AttachAsync().Forget(), "assets.publisher.attach", _source.Label);
 			attach.AddToClassList("large");
 			attach.AddToClassList("mt-8");
 			box.Add(attach);
@@ -279,20 +283,20 @@ namespace Nox.Assets.Editor {
 			// --- Information -----------------------------------------------------------------
 			var info = new VisualElement();
 
-			_infoServer = AddReadOnlyRow(info, "Server");
-			_infoId     = AddReadOnlyRow(info, "Id");
+			_infoServer = AddReadOnlyRow(info, "assets.publisher.server");
+			_infoId     = AddReadOnlyRow(info, "assets.publisher.id");
 
-			_infoName = AddRow(info, "Name", new TextField { }, null) as TextField;
-			_infoDescription = AddRow(info, "Description", new TextField { multiline = true }, null) as TextField;
+			_infoName = AddRow(info, "assets.publisher.name", new TextField { }, null) as TextField;
+			_infoDescription = AddRow(info, "assets.publisher.description", new TextField { multiline = true }, null) as TextField;
 
 			// Values the mod contributes (capacity, viseme count…): typed rows, above the buttons.
 			foreach (var entry in _source.Info)
 				if (entry != null)
 					info.Add(entry.Build());
 
-			var refresh = new Button(() => _source.RefreshAsync().Forget()) { text = "Refresh" };
-			var detach  = new Button(() => { _source.Detach(); RefreshSelection(); }) { text = "Detach" };
-			var update  = new Button(() => UpdateInfoAsync().Forget()) { text = "Update" };
+			var refresh = AssetLocalization.Button(() => _source.RefreshAsync().Forget(), "assets.common.refresh");
+			var detach  = AssetLocalization.Button(() => { _source.Detach(); RefreshSelection(); }, "assets.publisher.detach");
+			var update  = AssetLocalization.Button(() => UpdateInfoAsync().Forget(), "assets.publisher.update");
 
 			var actions = new VisualElement { style = { flexDirection = FlexDirection.Row } };
 			actions.AddToClassList("mt-8");
@@ -304,14 +308,16 @@ namespace Nox.Assets.Editor {
 			}
 			info.Add(actions);
 
-			container.Add(Foldout("information", $"{_source.Label} information", info));
+			container.Add(Foldout("information", "assets.publisher.information", info, true, _source.Label));
 
 			// --- Release ---------------------------------------------------------------------
 			var release = new VisualElement();
 
 			var versionRow = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center } };
 			versionRow.AddToClassList("mb-8");
-			versionRow.Add(new Label("Version") { style = { minWidth = 100 } });
+			var versionLabel = AssetLocalization.Label("assets.publisher.version");
+			versionLabel.style.minWidth = 100;
+			versionRow.Add(versionLabel);
 
 			_version = new UnsignedIntegerField { value = _source.Version, style = { flexGrow = 1, marginRight = 4 } };
 			_version.AddToClassList("large");
@@ -322,17 +328,20 @@ namespace Nox.Assets.Editor {
 			});
 			versionRow.Add(_version);
 
-			var detect = new Button(() => DetectVersionAsync().Forget()) { text = "Detect", style = { minWidth = 80 } };
-			detect.AddToClassList("large");
-			versionRow.Add(detect);
+			var detect = new Button(() => DetectVersionAsync().Forget()) { style = { minWidth = 80 } };
+			// Localized button: the text comes from the language pack, not from the constructor.
+			var detectButton = AssetLocalization.Button(() => DetectVersionAsync().Forget(), "assets.common.detect");
+			detectButton.style.minWidth = 80;
+			detectButton.AddToClassList("large");
+			versionRow.Add(detectButton);
 			release.Add(versionRow);
 
-			AddToggleRow(release, "Auto increment version", "auto_version");
-			AddToggleRow(release, "Strict version checking", "strict_version");
+			AddToggleRow(release, "assets.publisher.auto_version", "auto_version");
+			AddToggleRow(release, "assets.publisher.strict_version", "strict_version");
 
 			// Changelog of the release, laid out like the Description field of the information block:
 			// it is stored on the release when it is created (publish), or patched by « Save ».
-			_releaseNote = AddRow(release, "Changelog", new TextField { multiline = true, value = _source.ReleaseNote }, null) as TextField;
+			_releaseNote = AddRow(release, "assets.publisher.changelog", new TextField { multiline = true, value = _source.ReleaseNote }, null) as TextField;
 			_releaseNote.style.minHeight = 80;
 			_releaseNote.RegisterValueChangedCallback(evt => _source.ReleaseNote = evt.newValue);
 
@@ -340,13 +349,13 @@ namespace Nox.Assets.Editor {
 			noteActions.AddToClassList("mt-8");
 
 			// Saving only makes sense when the release of that version already exists.
-			_saveNote = new Button(() => SaveReleaseNoteAsync().Forget()) { text = "Save" };
+			_saveNote = AssetLocalization.Button(() => SaveReleaseNoteAsync().Forget(), "assets.common.save");
 			_saveNote.AddToClassList("large");
 			_saveNote.style.flexGrow = 1;
 			_saveNote.SetEnabled(false);
 			noteActions.Add(_saveNote);
 
-			var loadReleases = new Button(() => LoadReleasesAsync().Forget()) { text = "Published releases" };
+			var loadReleases = AssetLocalization.Button(() => LoadReleasesAsync().Forget(), "assets.publisher.published_releases");
 			loadReleases.AddToClassList("large");
 			loadReleases.style.flexGrow = 1;
 			loadReleases.style.marginLeft = 4;
@@ -358,17 +367,17 @@ namespace Nox.Assets.Editor {
 			_releases = new VisualElement { style = { marginTop = 8 } };
 			release.Add(_releases);
 
-			container.Add(Foldout("release", "Release", release));
+			container.Add(Foldout("release", "assets.publisher.release", release));
 
 			// --- Images ----------------------------------------------------------------------
 			_images = new AssetImageGrid();
-			container.Add(Foldout("images", "Images", _images));
+			container.Add(Foldout("images", "assets.publisher.images", _images));
 
 			// --- Sections contributed by the mod ---------------------------------------------
 			foreach (var section in _source.Sections) {
 				var content = new VisualElement();
 				section.Build(content, _source);
-				container.Add(Foldout(section.Id, section.Title, content, section.DefaultExpanded));
+				container.Add(Foldout(section.Id, section.TitleKey, content, section.DefaultExpanded));
 			}
 
 			// The last section must not draw its own bottom rule: the container already has one.
@@ -377,15 +386,24 @@ namespace Nox.Assets.Editor {
 			return container;
 		}
 
-		private VisualElement Foldout(string id, string title, VisualElement content, bool defaultExpanded = true) {
-			var foldout = new AssetPublishFoldout(_source.Panel, id, title, defaultExpanded);
+			private VisualElement Foldout(
+			string id,
+			string langKey,
+			VisualElement content,
+			bool defaultExpanded = true,
+			params object[] args
+		) {
+			var foldout = new AssetPublishFoldout(_source.Panel, id, langKey, defaultExpanded, args);
+
 			foldout.Add(content);
 			return foldout;
 		}
 
-		private static VisualElement AddRow(VisualElement parent, string label, VisualElement field, string placeholder) {
+		private static VisualElement AddRow(VisualElement parent, string labelKey, VisualElement field, string placeholder) {
 			var row = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, marginBottom = 8 } };
-			row.Add(new Label(label) { style = { minWidth = 100 } });
+			var label = AssetLocalization.Label(labelKey);
+			label.style.minWidth = 100;
+			row.Add(label);
 
 			if (field is TextField text && placeholder != null)
 				text.textEdition.placeholder = placeholder;
@@ -402,15 +420,17 @@ namespace Nox.Assets.Editor {
 		/// Row of a value the user cannot change (server, id…): a read-only field, so it lines up with the
 		/// editable rows instead of looking like a label.
 		/// </summary>
-		private static TextField AddReadOnlyRow(VisualElement parent, string label) {
+		private static TextField AddReadOnlyRow(VisualElement parent, string labelKey) {
 			var field = new TextField { isReadOnly = true };
 			field.AddToClassList("large");
-			return AddRow(parent, label, field, null) as TextField;
+			return AddRow(parent, labelKey, field, null) as TextField;
 		}
 
-		private void AddToggleRow(VisualElement parent, string label, string key) {
+		private void AddToggleRow(VisualElement parent, string labelKey, string key) {
 			var row = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, marginBottom = 8 } };
-			row.Add(new Label(label) { style = { minWidth = 150 } });
+			var label = AssetLocalization.Label(labelKey);
+			label.style.minWidth = 150;
+			row.Add(label);
 
 			var toggle = new Toggle { value = AssetPublishSettings.Get(_source.Panel, key, true) };
 			toggle.AddToClassList("large");
@@ -474,6 +494,9 @@ namespace Nox.Assets.Editor {
 			RefreshLogin();
 			RefreshSelection();
 		}
+
+		private void OnLanguageChanged(string language)
+			=> AssetLocalization.Refresh(_root);
 
 		private void OnUserUpdated() {
 			// A new user means a new server: the previously attached asset and the auto-attach attempt
@@ -709,7 +732,7 @@ namespace Nox.Assets.Editor {
 			_releases.Clear();
 
 			if (releases.Length == 0) {
-				_releases.Add(new Label("No release published yet.") { style = { opacity = 0.7f } });
+				_releases.Add(AssetLocalization.Label("assets.publisher.release.none"));
 				return;
 			}
 
@@ -722,7 +745,7 @@ namespace Nox.Assets.Editor {
 				row.Add(new Label(release.Status?.Status.ToString() ?? "-") { style = { minWidth = 90, opacity = 0.7f } });
 				row.Add(new Label($"{release.Files?.Length ?? 0} file(s)") { style = { flexGrow = 1, opacity = 0.7f } });
 
-				var use = new Button(() => {
+				var use = AssetLocalization.Button(() => {
 					if (ushort.TryParse(release.Name, out var version)) {
 						_source.Version = version;
 						_version.SetValueWithoutNotify(version);
@@ -731,7 +754,7 @@ namespace Nox.Assets.Editor {
 					var note = release.Changelog?.Resolve() ?? string.Empty;
 					_source.ReleaseNote = note;
 					_releaseNote.SetValueWithoutNotify(note);
-				}) { text = "Use" };
+				}, "assets.common.use");
 
 				use.AddToClassList("large");
 				row.Add(use);
