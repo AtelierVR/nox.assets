@@ -1,3 +1,4 @@
+using Nox.CCK.Language;
 using Nox.CCK.Mods.Cores;
 using Nox.CCK.Mods.Initializers;
 using Nox.Network.Assets;
@@ -14,6 +15,7 @@ namespace Nox.Assets.Editor {
 		public const string LogTag = "AssetsEditor";
 
 		private IEditorModCoreAPI _core;
+		private LanguagePack     _lang;
 
 		public static Editor Instance { get; private set; }
 
@@ -37,10 +39,21 @@ namespace Nox.Assets.Editor {
 			_core    = api;
 			Instance = this;
 
+			// Labels of the publisher/builder panels: « Assets/lang.asset ».
+			_lang = api.AssetAPI.GetAsset<LanguagePack>("lang.asset");
+
+			if (_lang != null)
+				LanguageManager.AddPack(_lang);
+
 			Logger.LogDebug("Asset editor helpers ready.", tag: LogTag);
 		}
 
 		public void OnPreDisposeEditor() {
+			if (_lang != null) {
+				LanguageManager.RemovePack(_lang);
+				_lang = null;
+			}
+
 			Instance = null;
 			_core    = null;
 		}

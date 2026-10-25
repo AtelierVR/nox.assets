@@ -1,0 +1,275 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 776389e82c640c44086d3baf10dd1c7b, type: 3}
+  m_Name: lang
+  m_EditorClassIdentifier: Nox.CCK::Nox.CCK.Language.LanguagePack
+  languages:
+  - IETF: en-US
+    entries:
+    - key: assets.common.refresh
+      value: "Refresh"
+    - key: assets.common.select
+      value: "Select"
+    - key: assets.common.open
+      value: "Open"
+    - key: assets.common.save
+      value: "Save"
+    - key: assets.common.remove
+      value: "Remove"
+    - key: assets.common.create
+      value: "Create"
+    - key: assets.common.detect
+      value: "Detect"
+    - key: assets.common.use
+      value: "Use"
+    - key: assets.publisher.attach
+      value: "Attach {0}"
+    - key: assets.publisher.server
+      value: "Server"
+    - key: assets.publisher.id
+      value: "Id"
+    - key: assets.publisher.name
+      value: "Name"
+    - key: assets.publisher.description
+      value: "Description"
+    - key: assets.publisher.detach
+      value: "Detach"
+    - key: assets.publisher.update
+      value: "Update"
+    - key: assets.publisher.information
+      value: "{0} information"
+    - key: assets.publisher.release
+      value: "Release"
+    - key: assets.publisher.version
+      value: "Version"
+    - key: assets.publisher.auto_version
+      value: "Auto increment version"
+    - key: assets.publisher.strict_version
+      value: "Strict version checking"
+    - key: assets.publisher.changelog
+      value: "Changelog"
+    - key: assets.publisher.published_releases
+      value: "Published releases"
+    - key: assets.publisher.images
+      value: "Images"
+    - key: assets.publisher.publish
+      value: "Publish"
+    - key: assets.publisher.not_logged.title
+      value: "Not Logged In"
+    - key: assets.publisher.not_logged.detail
+      value: "You need to be logged in to publish."
+    - key: assets.publisher.no_selection.title
+      value: "No {0} Selected"
+    - key: assets.publisher.no_selection.detail
+      value: "Please select a {0} to continue."
+    - key: assets.publisher.release.reading
+      value: "Reading releases of v{0}..."
+    - key: assets.publisher.release.none
+      value: "No release published yet."
+    - key: assets.publisher.release.missing
+      value: "No release v{0} to update yet: the changelog is sent when you publish."
+    - key: assets.publisher.release.status
+      value: "v{0}"
+    - key: assets.publisher.release.files
+      value: "{0} file(s)"
+    - key: assets.publisher.release.failed
+      value: "Failed to update the information."
+    - key: assets.publisher.attach_failed
+      value: "Failed to attach the {0}."
+    - key: assets.builder.output
+      value: "Output folder"
+    - key: assets.builder.build
+      value: "Build"
+    - key: assets.builder.no_selection.title
+      value: "No {0} Selected"
+    - key: assets.builder.no_selection.detail
+      value: "Please select a {0} to build."
+    - key: assets.builder.all_good.title
+      value: "All good"
+    - key: assets.builder.all_good.detail
+      value: "No notifications, this {0} is ready to build."
+    - key: assets.builder.built
+      value: "Build succeeded"
+    - key: assets.builder.failed
+      value: "Build failed"
+    - key: assets.builder.building
+      value: "Building..."
+    - key: assets.builder.preparing
+      value: "Preparing..."
+    - key: assets.images.add
+      value: "Add an image"
+    - key: assets.images.none
+      value: "No image yet."
+    - key: assets.images.priority
+      value: "Priority"
+    - key: assets.images.alt
+      value: "Alt"
+    - key: assets.images.not_attached
+      value: "Not attached to an asset."
+    - key: assets.images.cannot_read
+      value: "Cannot read {0}."
+    - key: assets.images.uploading
+      value: "Uploading {0}..."
+    - key: assets.images.uploading_progress
+      value: "Uploading {0}... {1}% ({2} MB)"
+    - key: assets.images.uploaded
+      value: "Image uploaded."
+    - key: assets.images.upload_failed
+      value: "Failed to upload the image."
+    - key: assets.images.removing
+      value: "Removing..."
+    - key: assets.images.removed
+      value: "Image removed."
+    - key: assets.images.remove_failed
+      value: "Failed to remove the image."
+    - key: assets.images.saving
+      value: "Saving..."
+    - key: assets.images.saved
+      value: "Image saved."
+    - key: assets.images.save_failed
+      value: "Failed to save the image."
+    - key: assets.notifications.not_connected
+      value: "You need to log in to publish a {0}."
+    - key: assets.notifications.no_selection
+      value: "No {0} selected."
+    - key: assets.notifications.none_found
+      value: "No {0} found in the scene."
+  - IETF: fr-FR
+    entries:
+    - key: assets.common.refresh
+      value: "Rafraîchir"
+    - key: assets.common.select
+      value: "Choisir"
+    - key: assets.common.open
+      value: "Ouvrir"
+    - key: assets.common.save
+      value: "Enregistrer"
+    - key: assets.common.remove
+      value: "Retirer"
+    - key: assets.common.create
+      value: "Créer"
+    - key: assets.common.detect
+      value: "Détecter"
+    - key: assets.common.use
+      value: "Utiliser"
+    - key: assets.publisher.attach
+      value: "Attacher {0}"
+    - key: assets.publisher.server
+      value: "Serveur"
+    - key: assets.publisher.id
+      value: "Id"
+    - key: assets.publisher.name
+      value: "Nom"
+    - key: assets.publisher.description
+      value: "Description"
+    - key: assets.publisher.detach
+      value: "Détacher"
+    - key: assets.publisher.update
+      value: "Mettre à jour"
+    - key: assets.publisher.information
+      value: "Informations de {0}"
+    - key: assets.publisher.release
+      value: "Publication"
+    - key: assets.publisher.version
+      value: "Version"
+    - key: assets.publisher.auto_version
+      value: "Incrémenter automatiquement"
+    - key: assets.publisher.strict_version
+      value: "Vérification stricte de version"
+    - key: assets.publisher.changelog
+      value: "Notes de version"
+    - key: assets.publisher.published_releases
+      value: "Versions publiées"
+    - key: assets.publisher.images
+      value: "Images"
+    - key: assets.publisher.publish
+      value: "Publier"
+    - key: assets.publisher.not_logged.title
+      value: "Non connecté"
+    - key: assets.publisher.not_logged.detail
+      value: "Vous devez être connecté pour publier."
+    - key: assets.publisher.no_selection.title
+      value: "Aucun {0} sélectionné"
+    - key: assets.publisher.no_selection.detail
+      value: "Sélectionnez un {0} pour continuer."
+    - key: assets.publisher.release.reading
+      value: "Lecture des versions de v{0}..."
+    - key: assets.publisher.release.none
+      value: "Aucune version publiée."
+    - key: assets.publisher.release.missing
+      value: "Aucune version v{0} à modifier : les notes partent à la publication."
+    - key: assets.publisher.release.status
+      value: "v{0}"
+    - key: assets.publisher.release.files
+      value: "{0} fichier(s)"
+    - key: assets.publisher.release.failed
+      value: "Échec de la mise à jour des informations."
+    - key: assets.publisher.attach_failed
+      value: "Échec de l'attachement du {0}."
+    - key: assets.builder.output
+      value: "Dossier de sortie"
+    - key: assets.builder.build
+      value: "Build"
+    - key: assets.builder.no_selection.title
+      value: "Aucun {0} sélectionné"
+    - key: assets.builder.no_selection.detail
+      value: "Sélectionnez un {0} à builder."
+    - key: assets.builder.all_good.title
+      value: "Tout est bon"
+    - key: assets.builder.all_good.detail
+      value: "Aucune notification, ce {0} peut être buildé."
+    - key: assets.builder.built
+      value: "Build réussi"
+    - key: assets.builder.failed
+      value: "Build échoué"
+    - key: assets.builder.building
+      value: "Build en cours..."
+    - key: assets.builder.preparing
+      value: "Préparation..."
+    - key: assets.images.add
+      value: "Ajouter une image"
+    - key: assets.images.none
+      value: "Aucune image."
+    - key: assets.images.priority
+      value: "Priorité"
+    - key: assets.images.alt
+      value: "Texte alternatif"
+    - key: assets.images.not_attached
+      value: "Aucun asset attaché."
+    - key: assets.images.cannot_read
+      value: "Impossible de lire {0}."
+    - key: assets.images.uploading
+      value: "Envoi de {0}..."
+    - key: assets.images.uploading_progress
+      value: "Envoi de {0}... {1}% ({2} Mo)"
+    - key: assets.images.uploaded
+      value: "Image envoyée."
+    - key: assets.images.upload_failed
+      value: "Échec de l'envoi de l'image."
+    - key: assets.images.removing
+      value: "Suppression..."
+    - key: assets.images.removed
+      value: "Image supprimée."
+    - key: assets.images.remove_failed
+      value: "Échec de la suppression de l'image."
+    - key: assets.images.saving
+      value: "Enregistrement..."
+    - key: assets.images.saved
+      value: "Image enregistrée."
+    - key: assets.images.save_failed
+      value: "Échec de l'enregistrement de l'image."
+    - key: assets.notifications.not_connected
+      value: "Connectez-vous pour publier un {0}."
+    - key: assets.notifications.no_selection
+      value: "Aucun {0} sélectionné."
+    - key: assets.notifications.none_found
+      value: "Aucun {0} trouvé dans la scène."
